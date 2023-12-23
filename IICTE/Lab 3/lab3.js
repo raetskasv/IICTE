@@ -18,73 +18,57 @@ document.addEventListener("DOMContentLoaded", () => {
 		
 	// bbxb	
 		
-	const lithiumGeometry = new THREE.SphereGeometry(0.03, 15, 15);
-    const lithiumMaterial = new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load('assets/images/perlin-512.png') });
-    const lithium = new THREE.Mesh(lithiumGeometry, lithiumMaterial);
-    scene.add(lithium);
+	// Створюємо ядро атома літію, яке складається з 3 протонів (червоні сфери) та 4 нейтронів (сірі сфери)
+	var nucleus = new THREE.Group();
+	var protonMaterial = new THREE.MeshBasicMaterial({color: "red"});
+	var neutronMaterial = new THREE.MeshBasicMaterial({color: "gray"});
+	var sphereGeometry = new THREE.SphereGeometry(0.1, 32, 32);
+	var proton1 = new THREE.Mesh(sphereGeometry, protonMaterial);
+	proton1.position.set(-0.15, 0, 0);
+	var proton2 = new THREE.Mesh(sphereGeometry, protonMaterial);
+	proton2.position.set(0.15, 0, 0);
+	var proton3 = new THREE.Mesh(sphereGeometry, protonMaterial);
+	proton3.position.set(0, 0.15, 0);
+	var neutron1 = new THREE.Mesh(sphereGeometry, neutronMaterial);
+	neutron1.position.set(0, -0.15, 0);
+	var neutron2 = new THREE.Mesh(sphereGeometry, neutronMaterial);
+	neutron2.position.set(0, 0, 0.15);
+	var neutron3 = new THREE.Mesh(sphereGeometry, neutronMaterial);
+	neutron3.position.set(0, 0, -0.15);
+	var neutron4 = new THREE.Mesh(sphereGeometry, neutronMaterial);
+	neutron4.position.set(0.15, 0.15, 0.15);
+	nucleus.add(proton1, proton2, proton3, neutron1, neutron2, neutron3, neutron4);
+	scene.add(nucleus);
 
-    const electron1 = createElectron(0.05, 0.05, 0.02, 0x0000FF);
-    electron1.position.setX(0.04 * Math.cos(Math.PI / 2));
-    electron1.position.setY(0.04 * Math.cos(Math.PI / 4));
-    electron1.position.setZ(0.04 * Math.sin(Math.PI / 2));
-    scene.add(electron1);
-
-    const electron2 = createElectron(0.08, 0.03, 0.04, 0xFFFF00);
-    electron2.position.set(0.08, 0, 0);
-    scene.add(electron2);
-
-    const electron3 = createElectron(0.11, 0.02, 0.06, 0x00FF00);
-    electron3.position.set(0.11, 0, 0);
-    electron3.rotation.x = Math.PI / 2;
-    scene.add(electron3);
-
-    addOrbit(scene, 0.05, 0x000000, 0, 0, 0);
-    addOrbit(scene, 0.08, 0x000000, 0, Math.PI / 2);
-    addOrbit(scene, 0.11, 0x000000, Math.PI / 2, 0, 0);
-
-    const skyGeometry = new THREE.SphereGeometry(1, 15, 15);
-    const skyMaterial = new THREE.MeshBasicMaterial({ color: 0x293134FF });
-    const sky = new THREE.Mesh(skyGeometry, skyMaterial);
-    scene.add(sky);
-
-    const planeGeometry = new THREE.PlaneGeometry(1, 1);
-    const planeMaterial = new THREE.MeshBasicMaterial({ color: 0x8F8F8F, side: THREE.DoubleSide });
-    const plane = new THREE.Mesh(planeGeometry, planeMaterial);
-    plane.rotation.x = -Math.PI / 2;
-    plane.position.y = -0.2;
-    scene.add(plane);
-
-    const main = createMain();
-    scene.add(main);
+	// Створюємо електрони (сині сфери) та їхні орбіти (білі кільця)
+	var electronMaterial = new THREE.MeshBasicMaterial({color: "blue"});
+	var orbitMaterial = new THREE.LineBasicMaterial({color: "white"});
+	var ringGeometry = new THREE.RingGeometry(0.9, 1, 32);
+	var electron1 = new THREE.Mesh(sphereGeometry, electronMaterial);
+	electron1.position.set(1, 0, 0);
+	var orbit1 = new THREE.Line(ringGeometry, orbitMaterial);
+	orbit1.rotation.x = Math.PI / 2;
+	var electron2 = new THREE.Mesh(sphereGeometry, electronMaterial);
+	electron2.position.set(0, 1, 0);
+	var orbit2 = new THREE.Line(ringGeometry, orbitMaterial);
+	orbit2.rotation.y = Math.PI / 2;
+	var electron3 = new THREE.Mesh(sphereGeometry, electronMaterial);
+	electron3.position.set(0, 0, 1);
+	var orbit3 = new THREE.Line(ringGeometry, orbitMaterial);
+	orbit3.rotation.z = Math.PI / 2;
+	scene.add(electron1, orbit1, electron2, orbit2, electron3, orbit3);
 	
-	function createElectron(animationRadius, animationSpeed, sphereRadius, color) {
-		const electronGeometry = new THREE.SphereGeometry(sphereRadius, 15, 15);
-		const electronMaterial = new THREE.MeshBasicMaterial({ color: color });
-		const electron = new THREE.Mesh(electronGeometry, electronMaterial);
-		setScale(electron);
-		electron.userData = { radius: animationRadius, speed: animationSpeed };
-		return electron;
-	}
-
-	function addOrbit(scene, radius, color, rotationx, rotationy) {
-		const orbitGeometry = new THREE.TorusGeometry(radius, 0.01, 15, 100);
-		const orbitMaterial = new THREE.MeshBasicMaterial({ color: color });
-		const orbit = new THREE.Mesh(orbitGeometry, orbitMaterial);
-		setScale(orbit);
-		orbit.rotation.x = rotationx;
-		orbit.rotation.y = rotationy;
-		scene.add(orbit);
-		return orbit;
-	}
-
-	function setScale(object) {
-		// Implement scaling logic if needed
-	}
-
-	function createMain() {
-		const main = new THREE.Object3D();
-		main.userData = { angle: 0 };
-		return main;
+	function animate() {
+	  requestAnimationFrame(animate);
+	  // Обертаємо ядро атома
+	  nucleus.rotation.x += 0.01;
+	  nucleus.rotation.y += 0.01;
+	  // Обертаємо електрони навколо ядра
+	  electron1.position.applyAxisAngle(new THREE.Vector3(0, 1, 0), 0.05);
+	  electron2.position.applyAxisAngle(new THREE.Vector3(1, 0, 0), 0.05);
+	  electron3.position.applyAxisAngle(new THREE.Vector3(0, 0, 1), 0.05);
+	  // Рендеримо сцену
+	  renderer.render(scene, camera);
 	}
 	
 	// lnvnd
@@ -100,25 +84,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		renderer.xr.addEventListener("sessionstart", (evt) => {
 			//console.log("Сесію WebXR розпочато");
 			renderer.setAnimationLoop(() => {
-			    for (let electron of [electron1, electron2, electron3]) {
-					let radius = parseFloat(electron.userData.radius);
-					let speed = parseFloat(electron.userData.speed);
-					let time = Date.now() / 500;
-
-					if (electron === electron1) {
-						electron.position.setX(radius * Math.cos(speed * time));
-						electron.position.setY(radius * Math.sin(speed * time));
-						electron.position.setZ(0);
-					} else if (electron === electron2) {
-						electron.position.setX(0);
-						electron.position.setY(radius * Math.cos(speed * time));
-						electron.position.setZ(radius * Math.sin(speed * time));
-					} else if (electron === electron3) {
-						electron.position.setX(radius * Math.cos(speed * time));
-						electron.position.setY(0);
-						electron.position.setZ(radius * Math.sin(speed * time));
-					}
-				}
+			    animate();
 			}); 
 		});
 
