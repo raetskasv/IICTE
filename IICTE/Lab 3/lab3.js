@@ -5,6 +5,7 @@ import {ARButton} from '../../js/three/ARButton.js';
 document.addEventListener("DOMContentLoaded", () => {
 	//основна функція
 	const initialize = async() => {
+		// створення сцени з червоним кубом розміром 5 см
 		let scene = new THREE.Scene();
 	    let camera = new THREE.PerspectiveCamera();
 
@@ -15,10 +16,8 @@ document.addEventListener("DOMContentLoaded", () => {
 	    renderer.setSize(window.innerWidth, window.innerHeight);
 	    renderer.setPixelRatio(window.devicePixelRatio);
 		document.body.appendChild(renderer.domElement);
-		
-	// bbxb	
-		
-	// Створюємо ядро атома літію, яке складається з 3 протонів (червоні сфери) та 4 нейтронів (сірі сфери)
+
+		// Створюємо ядро атома літію, яке складається з 3 протонів (червоні сфери) та 4 нейтронів (сірі сфери)
 	var nucleus = new THREE.Group();
 	var protonMaterial = new THREE.MeshBasicMaterial({color: "red"});
 	var neutronMaterial = new THREE.MeshBasicMaterial({color: "gray"});
@@ -70,9 +69,6 @@ document.addEventListener("DOMContentLoaded", () => {
 	  // Рендеримо сцену
 	  renderer.render(scene, camera);
 	}
-	
-	// lnvnd
-		
        
 		var light = new THREE.HemisphereLight(0xffffff, 0xbbbbff, 1);
         scene.add(light);
@@ -85,6 +81,7 @@ document.addEventListener("DOMContentLoaded", () => {
 			//console.log("Сесію WebXR розпочато");
 			renderer.setAnimationLoop(() => {
 			    animate();
+				//renderer.render(scene, camera);
 			}); 
 		});
 
